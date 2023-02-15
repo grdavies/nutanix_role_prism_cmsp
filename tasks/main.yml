@@ -6,14 +6,14 @@
 - name: Validate CMSP Configuration
   include_tasks: validate_cmsp.yml
   when:
-    - enable_cmsp == "yes"
+    - enable_cmsp
     - nutanix_cmsp_current_state == "Disabled"
     - nutanix_cmsp_current_task_uuid == ""
 
 - name: Enable CMSP
   include_tasks: enable_csmp.yml
   when:
-    - enable_cmsp == "yes"
+    - enable_cmsp
     - prism_cmsp_validate_task_status.json.progress_status == 'Succeeded'
     - nutanix_cmsp_current_state == "Disabled"
     - nutanix_cmsp_current_task_uuid == ""
