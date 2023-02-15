@@ -1,0 +1,19 @@
+---
+# tasks file for nutanix_role_prism_cmsp
+- name: Check current CMSP State
+  include_tasks: check_cmsp_state.yml
+
+- name: Validate CMSP Configuration
+  include_tasks: validate_cmsp.yml
+  when:
+    - enable_cmsp == "yes"
+    - nutanix_cmsp_current_state == "Disabled"
+    - nutanix_cmsp_current_task_uuid == ""
+
+- name: Enable CMSP
+  include_tasks: enable_csmp.yml
+  when:
+    - enable_cmsp == "yes"
+    - prism_cmsp_validate_task_status.json.progress_status == 'Succeeded'
+    - nutanix_cmsp_current_state == "Disabled"
+    - nutanix_cmsp_current_task_uuid == ""

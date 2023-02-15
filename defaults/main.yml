@@ -1,0 +1,4 @@
+---
+# defaults file for nutanix_role_prism_cmsp
+validate_certs: no
+enable_cmsp: no
