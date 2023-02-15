@@ -2,6 +2,7 @@
 
 This Ansible role enables MSP (Micro Service Platform) Prism Central. Nutanix Microservices Infrastructure (sometimes referred to as MSP) provides a common framework and services to deploy the container-based services associated with Prism Central based components like Flow Virtual Networking and Objects. It deploys services like Identity and Access Management (IAM), Load Balancing (LB), and Virtual Private Networking (VPN). Such services are packaged in containers as microservices and the control plane for the microservices platform enables microservices infrastructure. MSP is enabled by default on PC.2022.9.x but needs to be enabled on any prior release, once enabled MSP cannot be disabled. For further details please refer to https://portal.nutanix.com/page/documents/details?targetId=Prism-Central-Guide:mul-cmsp-overview-pc-c.html 
 
+> NOTE: Please be sure to read the MSP deployment guide and pre-requisites before enabling this feature. 
 
 ## Role Variables
 
