@@ -25,11 +25,6 @@
     - nutanix_debug
 
 - set_fact:
-    temp_fact1: '{{ nutanix_cmsp_current_state_result_value[".return"]["status"] }}'
-  vars:
-    query: 'value.".return".status'
-
-- set_fact:
     nutanix_cmsp_current_state: '{{ nutanix_cmsp_current_state_result_value[".return"]["status"] }}'
   vars:
     query: 'value.".return".status'
