@@ -2,3 +2,9 @@
 # defaults file for nutanix_role_prism_cmsp
 validate_certs: no
 enable_cmsp: no
+cmsp_domain_name: "prism-central.cluster.local"
+cmsp_network_default_gateway: "192.168.5.1"
+cmsp_network_type: "kPrivateNetwork"
+cmsp_subnet_mask: "255.255.255.0"
+cmsp_platform_ip_block_list:
+  - "192.168.5.2 192.168.5.64"
