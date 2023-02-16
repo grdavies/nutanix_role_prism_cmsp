@@ -16,6 +16,6 @@
   include_tasks: enable_csmp.yml
   when:
     - enable_cmsp
-    - prism_cmsp_validate_task_status.json.progress_status == 'Succeeded'
+    - prism_cmsp_validate_task_status.json.progress_status | default('') == 'Succeeded'
     - nutanix_cmsp_current_state == "Disabled"
     - nutanix_cmsp_current_task_uuid == ""
