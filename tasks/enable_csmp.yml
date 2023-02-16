@@ -27,28 +27,16 @@
     - nutanix_debug
 
 - name: Wait for CMSP enable task to complete
-  block:
-    - name: Checking CMSP enable task status
-      uri:
-        url: "https://{{nutanix_host}}:{{nutanix_port}}/PrismGateway/services/rest/v2.0/tasks/{{ nutanix_cmsp_enable_result.json.task_uuid }}"
-        method: GET
-        validate_certs: "{{ validate_certs }}"
-        status_code: 200
-        headers:
-          Authorization: "{{ nutanix_api_auth }}"
-      register: prism_cmsp_enable_task_status
-      until: prism_cmsp_enable_task_status.json.progress_status == 'Succeeded' or prism_cmsp_enable_task_status.json.progress_status == 'Failed'
-      retries: 30
-      delay: 120
+  ansible.builtin.import_role:
+    name: grdavies.nutanix_role_prism_monitor_task
+  vars:
+    nutanix_host: "{{ nutanix_host }}"
+    nutanix_username: "{{ nutanix_username }}"
+    nutanix_password: "{{ nutanix_password }}"
+    nutanix_debug: "{{ nutanix_debug }}"
+    nutanix_task_uuid: "{{ nutanix_cmsp_enable_result.json.task_uuid }}"
+    nutanix_task_retries: 30
+    nutanix_task_retry_delay: 120
 
-- name: Debug prism_cmsp_enable_task_status
-  debug:
-    var: prism_cmsp_enable_task_status
-  when:
-    - nutanix_debug
-
-- name: Checking CMSP enable task failed
-  ansible.builtin.fail:
-    msg: "CMSP enable task failed. {{ prism_cmsp_enable_task_status.json.message }}"
-  when:
-    - prism_cmsp_enable_task_status.json.progress_status == 'Failed'
+- set_fact:
+  prism_cmsp_enable_task_status: "{{ monitored_task }}"
