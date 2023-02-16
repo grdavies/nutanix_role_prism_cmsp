@@ -8,7 +8,7 @@
 
     - name: Start task to validate that CMSP can be enabled
       uri:
-        url: "{{ nutanix_api_v3 }}/prism_central/cmsp/configure"
+        url: "https://{{nutanix_host}}:{{nutanix_port}}/api/nutanix/v3/prism_central/cmsp/configure"
         body:
           operation: "kValidate"
           config:

@@ -2,7 +2,7 @@
 # tasks file for enable_cmsp
 - name: Start task to enable CMSP
   uri:
-    url: "{{ nutanix_api_v3 }}/prism_central/cmsp/configure"
+    url: "https://{{nutanix_host}}:{{nutanix_port}}/api/nutanix/v3/prism_central/cmsp/configure"
     body:
       operation: "kEnable"
       config:
@@ -30,7 +30,7 @@
   block:
     - name: Checking CMSP enable task status
       uri:
-        url: "{{ nutanix_api_v2 }}/tasks/{{ nutanix_cmsp_enable_result.json.task_uuid }}"
+        url: "https://{{nutanix_host}}:{{nutanix_port}}/PrismGateway/services/rest/v2.0/tasks/{{ nutanix_cmsp_enable_result.json.task_uuid }}"
         method: GET
         validate_certs: "{{ validate_certs }}"
         status_code: 200
@@ -43,12 +43,12 @@
 
 - name: Debug prism_cmsp_enable_task_status
   debug:
-    var: prism_cmsp_enable_task_status.json
+    var: prism_cmsp_enable_task_status
   when:
     - nutanix_debug
 
 - name: Checking CMSP enable task failed
   ansible.builtin.fail:
-    msg: "AHV HA update task failed. {{ prism_cmsp_enable_task_status.json.message }}"
+    msg: "CMSP enable task failed. {{ prism_cmsp_enable_task_status.json.message }}"
   when:
     - prism_cmsp_enable_task_status.json.progress_status == 'Failed'

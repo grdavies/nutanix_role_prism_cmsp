@@ -2,7 +2,7 @@
 # tasks file for check_cmsp_state
 - name: Get current CMSP configuration
   uri:
-    url: "{{ nutanix_api_v1 }}/genesis"
+    url: "https://{{nutanix_host}}:{{nutanix_port}}/PrismGateway/services/rest/v1/genesis"
     body:
       value: '{".oid":"ClusterManager",".method":"get_cmsp_status",".kwargs":{}}'
     method: POST
