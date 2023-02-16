@@ -67,4 +67,4 @@
     - debug:
         msg: "Validation tasks failed, attempting to validate again."
 
-    - include_task: validate_cmsp.yml
+    - include_tasks: validate_cmsp.yml
