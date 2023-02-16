@@ -1,5 +1,7 @@
 ---
 # tasks file for nutanix_role_prism_cmsp
+- include_tasks: setup_api.yml
+
 - name: Check current CMSP State
   include_tasks: check_cmsp_state.yml
 
