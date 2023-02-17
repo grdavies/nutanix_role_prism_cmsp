@@ -1,58 +1,47 @@
 ---
 # tasks file for enable_cmsp
-- name: CSMP validation tasks
-  block:
-    - name: Increment the block retry count
-      set_fact:
-        csmp_validation_retry_count: "{{ 0 if csmp_validation_retry_count is undefined else csmp_validation_retry_count | int + 1 }}"
+- debug:
+    var: nutanix_host
 
-    - name: Start task to validate that CMSP can be enabled
-      uri:
-        url: "https://{{nutanix_host}}:{{nutanix_port}}/api/nutanix/v3/prism_central/cmsp/configure"
-        body:
-          operation: "kValidate"
-          config:
-            platform_network_configuration:
-              subnet_mask: "{{ cmsp_subnet_mask }}"
-              type: "{{ cmsp_network_type }}"
-              default_gateway: "{{ cmsp_network_default_gateway }}"
-            pc_domain_name: "{{ cmsp_domain_name }}"
-            platform_ip_block_list: "{{ cmsp_platform_ip_block_list }}"
-        method: POST
-        validate_certs: "{{ validate_certs }}"
-        body_format: json
-        status_code: 202
-        headers:
-          Authorization: "{{ nutanix_api_auth }}"
-      register: nutanix_cmsp_validation_result
+- debug:
+    var: nutanix_port
 
-    - name: Debug nutanix_cmsp_validation_result
-      debug:
-        var: nutanix_cmsp_validation_result.json
-      when:
-        - nutanix_debug
+- debug:
+    msg: "https://{{nutanix_host}}:{{nutanix_port}}/api/nutanix/v3/prism_central/cmsp/configure"
 
-    - name: Wait for CMSP validatation task to complete
-      ansible.builtin.import_role:
-        name: grdavies.nutanix_role_prism_monitor_task
-      vars:
-        nutanix_host: "{{ nutanix_host }}"
-        nutanix_username: "{{ nutanix_username }}"
-        nutanix_password: "{{ nutanix_password }}"
-        nutanix_debug: "{{ nutanix_debug }}"
-        nutanix_task_uuid: "{{ nutanix_cmsp_validation_result.json.task_uuid }}"
-        nutanix_task_retries: 10
-        nutanix_task_retry_delay: 5
+- name: Start task to validate that CMSP can be enabled
+  uri:
+    url: "https://{{nutanix_host}}:{{nutanix_port}}/api/nutanix/v3/prism_central/cmsp/configure"
+    body:
+      operation: "kValidate"
+      config:
+        platform_network_configuration:
+          subnet_mask: "{{ cmsp_subnet_mask }}"
+          type: "{{ cmsp_network_type }}"
+          default_gateway: "{{ cmsp_network_default_gateway }}"
+        pc_domain_name: "{{ cmsp_domain_name }}"
+        platform_ip_block_list: "{{ cmsp_platform_ip_block_list }}"
+    method: POST
+    validate_certs: "{{ validate_certs }}"
+    body_format: json
+    status_code: 202
+    headers:
+      Authorization: "{{ nutanix_api_auth }}"
+  register: nutanix_cmsp_validation_result
 
-    - set_fact:
-        prism_cmsp_validate_task_status: "{{ monitored_task }}"
+- name: Debug nutanix_cmsp_validation_result
+  debug:
+    var: nutanix_cmsp_validation_result.json
+  when:
+    - nutanix_debug
 
-  rescue:
-    - fail:
-        msg: Maximum retries of validation tasks reached
-      when: csmp_validation_retry_count | int == 5
+- name: Wait for CMSP validatation task to complete
+  ansible.builtin.import_role:
+    name: grdavies.nutanix_role_prism_monitor_task
+  vars:
+    nutanix_task_uuid: "{{nutanix_cmsp_validation_result.json.task_uuid}}"
+    nutanix_task_retries: 10
+    nutanix_task_retry_delay: 5
 
-    - debug:
-        msg: "Validation tasks failed, attempting to validate again."
-
-    - include_tasks: validate_cmsp.yml
+- set_fact:
+    prism_cmsp_validate_task_status: "{{ monitored_task }}"
