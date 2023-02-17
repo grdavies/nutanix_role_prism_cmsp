@@ -45,7 +45,7 @@
         nutanix_task_retry_delay: 5
 
     - set_fact:
-      prism_cmsp_validate_task_status: "{{ monitored_task }}"
+        prism_cmsp_validate_task_status: "{{ monitored_task }}"
 
   rescue:
     - fail:
