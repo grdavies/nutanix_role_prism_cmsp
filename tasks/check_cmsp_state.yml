@@ -13,7 +13,8 @@
       Authorization: "{{ nutanix_api_auth }}"
   register: nutanix_cmsp_current_state
 
-- set_fact:
+- name: Set nutanix_cmsp_current_state_result_value
+  set_fact:
     nutanix_cmsp_current_state_result_value: "{{ nutanix_cmsp_current_state.json | community.general.json_query(query) | to_json | from_json }}"
   vars:
     query: "value"
@@ -24,7 +25,8 @@
   when:
     - nutanix_debug
 
-- set_fact:
+- name: Set nutanix_cmsp_current_state
+  set_fact:
     nutanix_cmsp_current_state: '{{ nutanix_cmsp_current_state_result_value[".return"]["status"] }}'
   vars:
     query: 'value.".return".status'
@@ -35,7 +37,8 @@
   when:
     - nutanix_debug
 
-- set_fact:
+- name: Set nutanix_cmsp_current_task_uuid
+  set_fact:
     nutanix_cmsp_current_task_uuid: '{{ nutanix_cmsp_current_state_result_value[".return"]["enable_task"] }}'
   vars:
     query: 'value.".return".status'

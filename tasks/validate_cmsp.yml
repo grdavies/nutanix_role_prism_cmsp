@@ -6,9 +6,6 @@
 - debug:
     var: nutanix_port
 
-- debug:
-    msg: "https://{{nutanix_host}}:{{nutanix_port}}/api/nutanix/v3/prism_central/cmsp/configure"
-
 - name: Start task to validate that CMSP can be enabled
   uri:
     url: "https://{{ nutanix_host }}:{{ nutanix_port }}/api/nutanix/v3/prism_central/cmsp/configure"
@@ -43,7 +40,8 @@
     nutanix_task_retries: 10
     nutanix_task_retry_delay: 5
 
-- set_fact:
+- name: Set prism_cmsp_validate_task_status
+  set_fact:
     prism_cmsp_validate_task_status: "{{ monitored_task }}"
 
 - name: Debug prism_cmsp_validate_task_status.json

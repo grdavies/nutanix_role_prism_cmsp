@@ -34,7 +34,8 @@
     nutanix_task_retries: 30
     nutanix_task_retry_delay: 120
 
-- set_fact:
+- name: Set prism_cmsp_enable_task_status
+  set_fact:
     prism_cmsp_enable_task_status: "{{ monitored_task }}"
 
 - name: Debug prism_cmsp_enable_task_status
